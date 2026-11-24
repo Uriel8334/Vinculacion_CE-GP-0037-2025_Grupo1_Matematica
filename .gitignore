@@ -1,0 +1,13 @@
+# Archivos temporales de sistema y editores
+.DS_Store
+Thumbs.db
+Desktop.ini
+~$*
+*.tmp
+*.bak
+
+# Entornos locales de Python (usados para scripts de verificacion matematica)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
