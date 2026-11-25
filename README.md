@@ -32,6 +32,12 @@ Construcción del aula virtual en **Moodle**, paquetes interactivos en **eXeLear
 - [Cronograma_Vinculacion_Grupo1_CE-GP-0037-2025.xlsx](./docs/insumos/Cronograma_Vinculacion_Grupo1_CE-GP-0037-2025.xlsx) — Planificación de 96 h por estudiante, hitos y hoja *Avance por capítulo*.
 - [Plantilla_Capitulo_ESPE.elpx](./docs/insumos/Plantilla_Capitulo_ESPE.elpx) — Plantilla base editable en eXeLearning (página `3.2 MRU` completa como modelo).
 - [Plantilla_Capitulo_ESPE_SCORM12.zip](./docs/insumos/Plantilla_Capitulo_ESPE_SCORM12.zip) — Ejemplo de paquete exportado a SCORM 1.2.
+- **Material Guía Oficial ESPE compartido por la docente (`docs/insumos/material-docente-espe/`):**
+  - [1_Logica_Matematica.pdf](./docs/insumos/material-docente-espe/1_Logica_Matematica.pdf) → Base para **Cap. 1 (`1.1`–`1.3` Lógica Matemática)**.
+  - [2_Conjuntos.pdf](./docs/insumos/material-docente-espe/2_Conjuntos.pdf) → Base para **Cap. 1 (`1.4`–`1.6` Conjuntos)**.
+  - [3_Numeros_Reales.pdf](./docs/insumos/material-docente-espe/3_Numeros_Reales.pdf) → Base para **Cap. 2 (`2.1`–`2.5` Números Reales)** e intervalos/inecuaciones.
+  - [4_Funciones.pdf](./docs/insumos/material-docente-espe/4_Funciones.pdf) → Base para **Cap. 4 (`4.1`–`4.5` Relaciones y funciones)**.
+  - [5_FuncionesAlgebraicas.pdf](./docs/insumos/material-docente-espe/5_FuncionesAlgebraicas.pdf) y [6_OperacionesConFuncionesAlgebraicas_CHyS.pdf](./docs/insumos/material-docente-espe/6_OperacionesConFuncionesAlgebraicas_CHyS.pdf) → Base para **Cap. 3 y Cap. 5** (productos notables, factorización, racionalización, Binomio de Newton, fracciones parciales y funciones algebraicas).
 
 ### 3. Reglas Compartidas para IA del Equipo
 - [.agents/rules/proyecto-vinculacion-matematica.md](./.agents/rules/proyecto-vinculacion-matematica.md) — Reglas que Antigravity carga automáticamente para cualquier integrante del grupo que abra este repositorio.

@@ -6,8 +6,10 @@ Desktop.ini
 *.tmp
 *.bak
 
-# Entornos locales de Python (usados para scripts de verificacion matematica)
+# Entornos locales de Python y cache de compilacion de Manim
 __pycache__/
 *.py[cod]
 .venv/
 venv/
+simuladores/manim_demo/media/
+
