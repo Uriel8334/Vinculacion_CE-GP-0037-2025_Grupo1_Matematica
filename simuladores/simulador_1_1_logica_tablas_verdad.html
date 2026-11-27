@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Simulador 1.1 · Lógica Matemática: Tablas de Verdad, Circuitos y Paso a Paso</title>
+<title>Simulador 1.1 · Lógica Matemática: Combinatoria 2ⁿ, Tablas de Verdad, Leyes y Circuitos</title>
 <style>
   :root {
     --espe-blue: #1F6FB2;
@@ -24,16 +24,50 @@
     --axioma-gold: #FBBF24;
     --axioma-emerald: #34D399;
     --axioma-rose: #FB7185;
+    --math-font: "Latin Modern Math", "STIX Two Math", "Cambria Math", "Times New Roman", Georgia, serif;
   }
   * { box-sizing: border-box; }
   body {
     font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
     margin: 0;
-    padding: 14px;
+    padding: 14px 16px 20px;
     color: var(--text);
     background: #FFFFFF;
     line-height: 1.45;
   }
+
+  /* Tipografía matemática estricta estilo LaTeX: variables en cursiva serif, operadores rectos */
+  .mexpr {
+    font-family: var(--math-font);
+    font-style: normal;
+    font-size: 1.06em;
+    letter-spacing: 0.01em;
+  }
+  var.mv, .mv {
+    font-family: var(--math-font);
+    font-style: italic;
+    font-weight: 500;
+    padding: 0 1px;
+  }
+  .mop {
+    font-family: var(--math-font);
+    font-style: normal;
+    padding: 0 2px;
+  }
+  .xor-espe {
+    display: inline-block;
+    font-family: var(--math-font);
+    font-style: normal;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    padding: 0 2px;
+  }
+  .mset {
+    font-family: var(--math-font);
+    font-style: normal;
+    font-weight: 700;
+  }
+
   .header-bar {
     display: flex;
     flex-wrap: wrap;
@@ -55,9 +89,10 @@
     color: var(--espe-blue-dark);
     font-size: 12px;
     font-weight: 700;
-    padding: 3px 10px;
+    padding: 4px 11px;
     border-radius: 999px;
   }
+
   .tabs {
     display: flex;
     flex-wrap: wrap;
@@ -68,7 +103,7 @@
     border: 1px solid var(--border);
     background: #F7FAFC;
     color: var(--text);
-    padding: 8px 14px;
+    padding: 8px 13px;
     border-radius: 8px;
     font-size: 13.5px;
     font-weight: 600;
@@ -100,6 +135,27 @@
     font-size: 13.5px;
     margin-bottom: 12px;
   }
+  .comb-banner {
+    background: #F8FAFC;
+    border: 1px solid #CBD5E1;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 10px 0;
+    font-size: 13.5px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .comb-formula {
+    background: #E1EAF8;
+    color: var(--espe-blue-dark);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 700;
+  }
+
   .btn {
     background: var(--espe-blue);
     color: #FFF;
@@ -119,24 +175,28 @@
     border: 1px solid var(--border);
   }
   .btn-outline:hover { background: var(--espe-bg-soft); border-color: var(--espe-blue); }
+  .btn-mode-active {
+    background: var(--espe-blue-dark);
+    color: #FFF;
+    border-color: var(--espe-blue-dark);
+  }
 
-  /* Tab 1: Constructor de tablas */
   .toolbar {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
     margin: 8px 0;
+    align-items: center;
   }
   .sym-btn {
     background: #F2F7FC;
     color: var(--espe-blue-dark);
     border: 1px solid #BBD4EC;
     border-radius: 6px;
-    padding: 6px 11px;
-    font-size: 15px;
-    font-weight: 700;
+    padding: 5px 11px;
+    font-size: 15.5px;
     cursor: pointer;
-    font-family: "Cambria Math", "Segoe UI Symbol", serif;
+    font-family: var(--math-font);
   }
   .sym-btn:hover { background: #E1EEF9; }
   .expr-row {
@@ -150,7 +210,7 @@
     min-width: 230px;
     padding: 8px 12px;
     font-size: 16px;
-    font-family: "Cambria Math", "Segoe UI Symbol", monospace;
+    font-family: var(--math-font);
     border: 1.5px solid var(--border);
     border-radius: 7px;
   }
@@ -162,24 +222,33 @@
     font-size: 13px;
     background: #FFF;
   }
+
   table.tt {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
+    margin-top: 8px;
     font-size: 14px;
   }
   table.tt th, table.tt td {
     border: 1px solid var(--border);
-    padding: 7px 8px;
+    padding: 7px 9px;
     text-align: center;
   }
   table.tt th {
     background: #EEF4FA;
     color: var(--espe-blue-dark);
-    font-family: "Cambria Math", "Segoe UI Symbol", sans-serif;
+    font-weight: 600;
+  }
+  table.tt th.inter-th {
+    background: #F8FAFC;
+    color: #334155;
+  }
+  table.tt th.final-th {
+    background: #DCEBFA;
+    color: #0A2E5C;
   }
   .pred-btn {
-    min-width: 44px;
+    min-width: 46px;
     padding: 4px 10px;
     border-radius: 5px;
     border: 1.5px solid #94A3B8;
@@ -212,7 +281,7 @@
   .feedback-msg.ok { display: block; background: var(--espe-green-bg); color: var(--espe-green); border-left: 4px solid var(--espe-green); }
   .feedback-msg.err { display: block; background: var(--espe-red-bg); color: var(--espe-red); border-left: 4px solid var(--espe-red); }
 
-  /* Quantifiers mini-lab */
+  /* Cuantificadores */
   .quant-grid {
     display: flex;
     flex-wrap: wrap;
@@ -228,24 +297,24 @@
   .q-chip.true { background: var(--espe-green-bg); border-color: #81C784; color: var(--espe-green); }
   .q-chip.false { background: var(--espe-red-bg); border-color: #E57373; color: var(--espe-red); }
 
-  /* Tab 2: Circuito & Agua */
+  /* Pestaña 2: Circuito y Agua */
   .sim-grid {
     display: grid;
-    grid-template-columns: 1fr 280px;
+    grid-template-columns: 1fr 290px;
     gap: 14px;
   }
-  @media (max-width: 760px) { .sim-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 780px) { .sim-grid { grid-template-columns: 1fr; } }
   .switch-row {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: 10px;
     align-items: center;
     margin-bottom: 10px;
   }
   .toggle-var {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     padding: 7px 14px;
     border-radius: 8px;
     border: 2px solid var(--border);
@@ -268,7 +337,32 @@
     font-weight: 700;
   }
 
-  /* Tab 3: Pizarra Axioma */
+  /* Pestaña 3: Leyes Visuales */
+  .laws-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  @media (max-width: 720px) { .laws-grid { grid-template-columns: 1fr; } }
+  .law-side {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    background: #FAFCFF;
+  }
+  .law-eq-banner {
+    text-align: center;
+    font-size: 20px;
+    padding: 10px;
+    background: #EEF6FF;
+    border-radius: 8px;
+    border: 1px solid #BFDBFE;
+    color: var(--espe-blue-dark);
+    margin-bottom: 10px;
+  }
+
+  /* Pestaña 4: Pizarra Axioma */
   .axioma-wrap {
     background: var(--axioma-bg);
     color: #F8FAFC;
@@ -293,7 +387,7 @@
     font-size: 13.5px;
   }
   .axioma-stage {
-    min-height: 270px;
+    min-height: 265px;
     background: radial-gradient(circle at top, #16223B 0%, #0B101E 75%);
     border: 1px solid #1E293B;
     border-radius: 10px;
@@ -317,10 +411,7 @@
     transform: translateY(10px);
     transition: all 0.42s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  .ax-step-line.shown {
-    opacity: 0.62;
-    transform: translateY(0);
-  }
+  .ax-step-line.shown { opacity: 0.65; transform: translateY(0); }
   .ax-step-line.current {
     opacity: 1;
     transform: translateY(0) scale(1.01);
@@ -329,8 +420,8 @@
     box-shadow: 0 0 18px rgba(56, 189, 248, 0.14);
   }
   .ax-formula {
-    font-family: "Cambria Math", "Segoe UI Symbol", Georgia, serif;
-    font-size: 20px;
+    font-family: var(--math-font);
+    font-size: 21px;
     letter-spacing: 0.3px;
   }
   .ax-law {
@@ -375,98 +466,129 @@
   }
   .ax-btn:hover { background: #334155; }
   .ax-btn.primary { background: #0284C7; border-color: #38BDF8; }
-  .nota-pie {
+
+  /* Sello obligatorio de autoría en esquina inferior derecha */
+  .author-footer {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid #E2E8F0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
     font-size: 12px;
     color: var(--muted);
-    margin-top: 10px;
-    text-align: right;
+  }
+  .author-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #F1F5F9;
+    border: 1px solid #CBD5E1;
+    color: #1E293B;
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-weight: 600;
   }
 </style>
 </head>
 <body>
 
 <div class="header-bar">
-  <h1>Simulador 1.1 · Lógica Matemática: Tablas de Verdad, Circuitos y Animación Paso a Paso</h1>
-  <span class="badge-puente">Capítulo 1 · Enfoque: Puente a la universidad · ESPE</span>
+  <h1>Simulador 1.1 · Lógica Matemática: Combinatoria <span class="mexpr">2<sup><var class="mv">n</var></sup></span>, Tablas de Verdad, Leyes y Circuitos</h1>
+  <span class="badge-puente">Capítulo 1 · Enfoque: Puente a la universidad · ESPE (v2.0)</span>
 </div>
 
 <div class="tabs" role="tablist">
-  <button class="tab-btn active" onclick="switchTab('tab1', this)">1. Constructor y Reto de Tablas / Cuantificadores</button>
-  <button class="tab-btn" onclick="switchTab('tab2', this)">2. Intuición Visual: Circuito y Flujo de Agua</button>
-  <button class="tab-btn" onclick="switchTab('tab3', this)">3. Pizarra Animada (Estilo Axioma)</button>
+  <button class="tab-btn active" onclick="switchTab('tab1', this)">1. Combinatoria <span class="mexpr">2<sup><var class="mv">n</var></sup></span> y Tablas de Verdad</button>
+  <button class="tab-btn" onclick="switchTab('tab2', this)">2. Intuición Física: Circuito y Agua</button>
+  <button class="tab-btn" onclick="switchTab('tab3', this)">3. Explorador Visual de Leyes Lógicas</button>
+  <button class="tab-btn" onclick="switchTab('tab4', this)">4. Demostraciones Paso a Paso (Estilo Axioma)</button>
 </div>
 
-<!-- ==================== PESTAÑA 1: CONSTRUCTOR Y RETO ==================== -->
+<!-- ==================== PESTAÑA 1: COMBINATORIA 2^n Y CONSTRUCTOR DE TABLAS ==================== -->
 <section id="tab1" class="panel active">
   <div class="instrucciones">
-    <strong>Qué haces:</strong> Arma una proposición compuesta usando los conectivos oficiales ESPE (<code>¬</code>, <code>∧</code>, <code>∨</code>, <code>⊻</code>, <code>⇒</code>, <code>⇔</code>) o elige un ejercicio guía.
-    <br><strong>Reto:</strong> Antes de comprobar, haz clic en cada fila para <strong>predecir su valor de verdad (V o F)</strong> y clasifica si la expresión es <strong>Tautología</strong>, <strong>Contradicción</strong> o <strong>Contingencia</strong>.
+    <strong>Cómo funciona una Tabla de Verdad:</strong> Primero determinamos todas las combinaciones posibles de entrada con la fórmula <span class="mexpr"><strong>2<sup><var class="mv">n</var></sup></strong></span> (donde <var class="mv">n</var> es el número de proposiciones simples), evaluamos paso a paso cada columna intermedia y al final clasificamos el resultado en <strong>Tautología</strong>, <strong>Contradicción</strong> o <strong>Contingencia</strong>.
   </div>
 
   <div class="card">
     <div class="expr-row">
       <label for="exprInput" style="font-weight:700;font-size:14px;">Proposición:</label>
       <input id="exprInput" class="expr-input" type="text" value="(¬p ∧ q) ⇒ (p ∨ ¬q)" aria-label="Fórmula lógica">
-      <button class="btn" onclick="buildTruthTable()">Generar tabla</button>
+      <button class="btn" onclick="buildTruthTable()">Construir tabla</button>
       <select id="presetSelect" class="preset-sel" onchange="loadPreset(this.value)">
-        <option value="">— Ejemplos del material ESPE —</option>
-        <option value="(¬p ∧ q) ⇒ (p ∨ ¬q)">Ej. 1 ESPE: (¬p ∧ q) ⇒ (p ∨ ¬q) [Contingencia]</option>
-        <option value="(p ∨ (q ∧ r)) ⇔ ((p ∨ q) ∧ (p ∨ r))">Ej. 2 ESPE: Distributiva 3 vars [Tautología]</option>
-        <option value="(p ⊻ q) ⇔ (p ⇔ q)">Ej. 3 ESPE: (p ⊻ q) ⇔ (p ⇔ q) [Contradicción]</option>
-        <option value="¬(p ⇒ q) ⇔ (p ∧ ¬q)">Negación del condicional [Tautología]</option>
-        <option value="(p ⇒ q) ⇔ (¬q ⇒ ¬p)">Ley del Contrarrecíproco [Tautología]</option>
+        <option value="">— Ejemplos oficiales ESPE —</option>
+        <option value="(¬p ∧ q) ⇒ (p ∨ ¬q)">Ej. 1 ESPE: [¬p ∧ q] ⇒ [p ∨ (¬q)] (Contingencia)</option>
+        <option value="(p ∨ (q ∧ r)) ⇔ ((p ∨ q) ∧ (p ∨ r))">Ej. 2 ESPE: Ley Distributiva 3 variables (Tautología)</option>
+        <option value="(p ⊻ q) ⇔ (p ⇔ q)">Ej. 3 ESPE: (p ⊻ q) ⇔ (p ⇔ q) (Contradicción)</option>
+        <option value="¬(p ⇒ q) ⇔ (p ∧ ¬q)">Negación del condicional (Tautología)</option>
+        <option value="(p ⇒ q) ⇔ (¬q ⇒ ¬p)">Ley del Contrarrecíproco (Tautología)</option>
       </select>
     </div>
 
-    <div class="toolbar" aria-label="Teclado de símbolos lógicos">
-      <button class="sym-btn" onclick="insertSym('p')">p</button>
-      <button class="sym-btn" onclick="insertSym('q')">q</button>
-      <button class="sym-btn" onclick="insertSym('r')">r</button>
+    <div class="toolbar" aria-label="Teclado matemático de símbolos lógicos">
+      <button class="sym-btn" onclick="insertSym('p')"><var class="mv">p</var></button>
+      <button class="sym-btn" onclick="insertSym('q')"><var class="mv">q</var></button>
+      <button class="sym-btn" onclick="insertSym('r')"><var class="mv">r</var></button>
       <button class="sym-btn" title="Negación (no)" onclick="insertSym('¬')">¬</button>
       <button class="sym-btn" title="Conjunción (y)" onclick="insertSym(' ∧ ')">∧</button>
       <button class="sym-btn" title="Disyunción inclusiva (o)" onclick="insertSym(' ∨ ')">∨</button>
-      <button class="sym-btn" title="Disyunción exclusiva (ó)" onclick="insertSym(' ⊻ ')">⊻ (ó)</button>
-      <button class="sym-btn" title="Condicional (entonces)" onclick="insertSym(' ⇒ ')">⇒</button>
-      <button class="sym-btn" title="Bicondicional (si y solo si)" onclick="insertSym(' ⇔ ')">⇔</button>
+      <button class="sym-btn" title="Disyunción exclusiva (ó)" onclick="insertSym(' ⊻ ')"><span class="xor-espe">∨</span> (ó)</button>
+      <button class="sym-btn" title="Condicional (implica / entonces)" onclick="insertSym(' ⇒ ')">⇒</button>
+      <button class="sym-btn" title="Bicondicional (si y solamente si)" onclick="insertSym(' ⇔ ')">⇔</button>
       <button class="sym-btn" onclick="insertSym('(')">(</button>
       <button class="sym-btn" onclick="insertSym(')')">)</button>
-      <button class="btn btn-outline" style="margin-left:auto" onclick="toggleStepsCols()">Mostrar / ocultar pasos intermedios</button>
+
+      <div style="margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;">
+        <button id="btnModeStudy" class="btn btn-outline btn-mode-active" onclick="setTableMode('study')">📖 Tabla completa explicada</button>
+        <button id="btnModeChallenge" class="btn btn-outline" onclick="setTableMode('challenge')">🎯 Modo Reto (Predecir V/F)</button>
+      </div>
     </div>
+
+    <!-- Banner dinámico de combinatoria 2^n -->
+    <div id="combBanner" class="comb-banner"></div>
 
     <div id="parseError" class="feedback-msg err"></div>
     <div id="tableContainer" style="overflow-x:auto;"></div>
 
-    <div class="reto-box">
+    <!-- Panel inferior según modo -->
+    <div id="studySummaryBox" class="reto-box"></div>
+
+    <div id="challengeBox" class="reto-box" style="display:none;">
       <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;">
-        <strong>Clasificación esperada:</strong>
+        <strong>Clasificación final esperada:</strong>
         <label><input type="radio" name="clasif" value="Tautología"> Tautología (todas V)</label>
         <label><input type="radio" name="clasif" value="Contradicción"> Contradicción (todas F)</label>
         <label><input type="radio" name="clasif" value="Contingencia"> Contingencia (mezcla V y F)</label>
         <div style="margin-left:auto;display:flex;gap:6px;">
-          <button class="btn" onclick="checkPredictions()">✓ Comprobar reto</button>
-          <button class="btn btn-sec" onclick="fillAllPredictions()">Autocompletar y explicar</button>
+          <button class="btn" onclick="checkPredictions()">✓ Comprobar predicción</button>
+          <button class="btn btn-sec" onclick="fillAllPredictions()">Mostrar solución completa</button>
         </div>
       </div>
       <div id="retoFeedback" class="feedback-msg"></div>
     </div>
   </div>
 
-  <!-- Mini-laboratorio de Cuantificadores (Subtítulo 1.2) -->
+  <!-- Mini-laboratorio de Cuantificadores (Subtítulo 1.2 - sin cuadráticas ni inecuaciones adelantadas) -->
   <div class="card">
-    <h3 style="margin:0 0 6px;font-size:15.5px;color:var(--espe-blue-dark);">Explorador rápido de Cuantificadores (Subtítulo 1.2 · ∀ y ∃)</h3>
+    <h3 style="margin:0 0 6px;font-size:15.5px;color:var(--espe-blue-dark);">
+      Explorador de Funciones Proposicionales y Cuantificadores (Subtítulo 1.2 · <span class="mexpr">∀</span> y <span class="mexpr">∃</span>)
+    </h3>
     <p style="margin:0 0 8px;font-size:13.5px;color:var(--muted);">
-      Sea el conjunto dominio <strong>A = {1, 2, 3, 4, 5}</strong>. Cambia el cuantificador y la función proposicional <em>P(x)</em> para observar qué elementos la cumplen y cómo se escribe su <strong>negación</strong>:
+      Sobre el conjunto dominio <span class="mexpr"><strong>A</strong> = {1, 2, 3, 4, 6}</span>, observa cómo una expresión abierta <span class="mexpr"><var class="mv">P</var>(<var class="mv">x</var>)</span> se convierte en proposición al anteponer <span class="mexpr">∀</span> (<em>para todo</em>) o <span class="mexpr">∃</span> (<em>existe al menos un</em>):
     </p>
     <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
       <select id="qType" class="preset-sel" onchange="updateQuantifiers()">
-        <option value="forall">∀x ∈ A : P(x)  (Para todo x en A)</option>
-        <option value="exists">∃x ∈ A : P(x)  (Existe al menos un x en A)</option>
+        <option value="forall">∀x ∈ A : P(x)  — Para todo elemento x de A</option>
+        <option value="exists">∃x ∈ A : P(x)  — Existe al menos un x en A</option>
       </select>
       <select id="qPred" class="preset-sel" onchange="updateQuantifiers()">
-        <option value="lt6">P(x): x + 2 ≤ 7</option>
+        <option value="div12">P(x): x es divisor exacto de 12</option>
         <option value="even">P(x): x es número par</option>
-        <option value="eq4">P(x): x + 3 = 7</option>
-        <option value="gt9">P(x): x² &gt; 30</option>
+        <option value="eq7">P(x): x + 3 = 7</option>
+        <option value="eq15">P(x): 2x = 15</option>
       </select>
     </div>
     <div id="quantChips" class="quant-grid"></div>
@@ -477,30 +599,30 @@
 <!-- ==================== PESTAÑA 2: CIRCUITO Y AGUA ==================== -->
 <section id="tab2" class="panel">
   <div class="instrucciones">
-    <strong>Intuición física de los conectivos:</strong> En la vida diaria, <code>V</code> equivale a un interruptor cerrado (pasa corriente / pasa agua) y <code>F</code> a un interruptor abierto (no pasa). Conmuta <strong>p</strong> y <strong>q</strong> para descubrir por qué cada tabla de verdad funciona así.
+    <strong>Intuición física de los conectivos:</strong> Asocia <strong>V</strong> con un paso cerrado (circula corriente o agua) y <strong>F</strong> con un paso abierto (cortado). Conmuta las proposiciones <span class="mexpr"><var class="mv">p</var></span> y <span class="mexpr"><var class="mv">q</var></span> para visualizar cada conectivo.
   </div>
 
   <div class="card">
     <div class="switch-row">
       <label style="font-weight:700;font-size:14px;">Conectivo:</label>
       <select id="gateOp" class="preset-sel" onchange="renderPhysical()">
-        <option value="AND">Conjunción: p ∧ q (Serie: ambos deben ser V)</option>
-        <option value="OR">Disyunción inclusiva: p ∨ q (Paralelo: basta uno en V)</option>
+        <option value="AND">Conjunción: p ∧ q (En serie: ambos deben ser V)</option>
+        <option value="OR">Disyunción inclusiva: p ∨ q (En paralelo: basta uno en V)</option>
         <option value="XOR">Disyunción exclusiva: p ⊻ q (Uno u otro, pero no ambos)</option>
-        <option value="IMP">Condicional: p ⇒ q ≡ ¬p ∨ q (Solo falla si p=V y q=F)</option>
+        <option value="IMP">Condicional: p ⇒ q ≡ ¬p ∨ q (Solo falla si p = V y q = F)</option>
         <option value="BIC">Bicondicional: p ⇔ q (Ambos con igual valor de verdad)</option>
-        <option value="NOT">Negación: ¬p (Inversor de estado)</option>
+        <option value="NOT">Negación: ¬p (Inversor lógico)</option>
       </select>
 
-      <label style="font-weight:700;font-size:14px;margin-left:8px;">Metáfora visual:</label>
+      <label style="font-weight:700;font-size:14px;margin-left:6px;">Modelo:</label>
       <select id="metaphorMode" class="preset-sel" onchange="renderPhysical()">
         <option value="circuit">⚡ Circuito eléctrico con foco</option>
-        <option value="water">💧 Flujo de agua con válvulas</option>
+        <option value="water">💧 Tubería con llaves de agua</option>
       </select>
 
       <div style="margin-left:auto;display:flex;gap:8px;">
-        <button id="btnVarP" class="toggle-var on" onclick="togglePhysVar('p')">p = V</button>
-        <button id="btnVarQ" class="toggle-var on" onclick="togglePhysVar('q')">q = V</button>
+        <button id="btnVarP" class="toggle-var on" onclick="togglePhysVar('p')"><span class="mexpr"><var class="mv">p</var> = V</span></button>
+        <button id="btnVarQ" class="toggle-var on" onclick="togglePhysVar('q')"><span class="mexpr"><var class="mv">q</var> = V</span></button>
       </div>
     </div>
 
@@ -517,29 +639,54 @@
   </div>
 </section>
 
-<!-- ==================== PESTAÑA 3: PIZARRA ANIMADA AXIOMA ==================== -->
+<!-- ==================== PESTAÑA 3: EXPLORADOR VISUAL DE LEYES LÓGICAS ==================== -->
 <section id="tab3" class="panel">
+  <div class="instrucciones">
+    <strong>¿Por qué se cumplen las Leyes del Álgebra de Proposiciones?</strong> Dos expresiones son lógicamente equivalentes (<span class="mexpr">≡</span>) cuando producen <strong>exactamente la misma columna de verdad</strong> en todos los casos posibles. Selecciona una ley para comprobarlo visualmente.
+  </div>
+
+  <div class="card">
+    <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:10px;">
+      <label style="font-weight:700;font-size:14px;">Ley del sílabo ESPE:</label>
+      <select id="lawSelect" class="preset-sel" onchange="renderVisualLaw()">
+        <option value="0">Ley de De Morgan (Conjunción): ¬(p ∧ q) ≡ ¬p ∨ ¬q</option>
+        <option value="1">Ley de De Morgan (Disyunción): ¬(p ∨ q) ≡ ¬p ∧ ¬q</option>
+        <option value="2">Equivalencia del Condicional: (p ⇒ q) ≡ (¬p ∨ q)</option>
+        <option value="3">Negación del Condicional: ¬(p ⇒ q) ≡ p ∧ ¬q</option>
+        <option value="4">Ley del Contrarrecíproco: (p ⇒ q) ≡ (¬q ⇒ ¬p)</option>
+        <option value="5">Ley de Absorción: p ∧ (p ∨ q) ≡ p</option>
+        <option value="6">Ley de Complemento e Identidad: p ∨ ¬p ≡ V  y  p ∨ F ≡ p</option>
+      </select>
+    </div>
+
+    <div id="lawBanner" class="law-eq-banner"></div>
+    <p id="lawIntuition" style="margin:0 0 10px;font-size:13.5px;color:#334155;"></p>
+    <div id="lawComparison" class="laws-grid"></div>
+  </div>
+</section>
+
+<!-- ==================== PESTAÑA 4: PIZARRA ANIMADA AXIOMA ==================== -->
+<section id="tab4" class="panel">
   <div class="axioma-wrap">
     <div class="axioma-top">
       <div>
-        <span style="font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--axioma-cyan);font-weight:700;">Demostración visual paso a paso</span>
+        <span style="font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--axioma-cyan);font-weight:700;">Transformación simbólica paso a paso</span>
         <h2 id="axTitle" style="margin:2px 0 0;font-size:17px;color:#FFF;"></h2>
       </div>
       <select id="axLessonSelect" class="axioma-select" onchange="loadAxiomaLesson(this.value)">
         <option value="0">1.1 · Negación de un condicional: ¬(p ⇒ q) ≡ p ∧ ¬q</option>
-        <option value="1">1.1 · Demostrar tautología sin tabla: p ⇒ (p ∨ q) ≡ V</option>
+        <option value="1">1.1 · Demostrar tautología con leyes: p ⇒ (p ∨ q) ≡ V</option>
         <option value="2">1.2 · Negación con cuantificadores: ¬[∀x ∈ ℝ : x + 3 = 7]</option>
         <option value="3">1.3 · Demostración indirecta (Contrarrecíproco): Si 3n + 2 es impar ⇒ n es impar</option>
       </select>
     </div>
 
     <div id="axStage" class="axioma-stage"></div>
-
     <div id="axExplain" class="ax-explain"></div>
 
     <div class="ax-controls">
       <div style="display:flex;gap:6px;flex-wrap:wrap;">
-        <button class="ax-btn primary" id="axPlayBtn" onclick="toggleAxiomaPlay()">▶ Reproducir animación</button>
+        <button class="ax-btn primary" id="axPlayBtn" onclick="toggleAxiomaPlay()">▶ Reproducir paso a paso</button>
         <button class="ax-btn" onclick="prevAxiomaStep()">⏮ Anterior</button>
         <button class="ax-btn" onclick="nextAxiomaStep()">⏭ Siguiente paso</button>
         <button class="ax-btn" onclick="resetAxioma()">↺ Reiniciar</button>
@@ -549,10 +696,22 @@
   </div>
 </section>
 
-<p class="nota-pie">Simulador interactivo propio del proyecto CE-GP-0037-2025 (ESPE · Matemática – Álgebra). Funciona 100 % sin conexión.</p>
+<footer class="author-footer">
+  <span>Recurso interactivo sin conexión · Basado en el Sílabo de Matemática (Álgebra) ESPE.</span>
+  <span class="author-badge">© Desarrollado por: Uriel Andrade &amp; Leidy Saraguro · Ing. en Software ESPE · Proyecto CE-GP-0037-2025</span>
+</footer>
 
 <script>
-/* ==================== NAVEGACIÓN DE PESTAÑAS ==================== */
+/* ==================== FORMATEADOR MATEMÁTICO ESTILO LATEX ==================== */
+function fmtMathHTML(str) {
+  // Convierte variables proposicionales/numéricas a cursiva matemática serif (<var class="mv">) y ⊻ a v subrayada ESPE
+  return str
+    .replace(/⊻/g, '§XOR§')
+    .replace(/\b([pqrnkmx])\b/g, '<var class="mv">$1</var>')
+    .replace(/§XOR§/g, '<span class="xor-espe">∨</span>');
+}
+
+/* ==================== PESTAÑAS ==================== */
 function switchTab(id, btn) {
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -560,9 +719,9 @@ function switchTab(id, btn) {
   btn.classList.add('active');
 }
 
-/* ==================== PARSER LÓGICO (6 CONECTIVOS ESPE) ==================== */
+/* ==================== PARSER Y MOTOR DE TABLAS DE VERDAD ==================== */
 let currentRows = [];
-let showIntermediate = false;
+let tableMode = 'study'; // 'study' muestra toda la tabla completa; 'challenge' permite predecir
 
 function normalizeExpr(raw) {
   return raw
@@ -585,13 +744,12 @@ function tokenize(str) {
     if ('pqr()¬∧∨⊻⇒⇔VF'.includes(ch)) {
       tokens.push(ch);
     } else {
-      throw new Error('Símbolo no reconocido: "' + ch + '". Usa p, q, r y los conectivos ¬, ∧, ∨, ⊻, ⇒, ⇔.');
+      throw new Error('Símbolo no reconocido: "' + ch + '". Usa las variables p, q, r y los conectivos ¬, ∧, ∨, ⊻, ⇒, ⇔.');
     }
   }
   return tokens;
 }
 
-// Precedencia: ¬ > ∧ > ∨ > ⊻ > ⇒ > ⇔
 function parseFormula(tokens) {
   let pos = 0;
   function peek() { return tokens[pos]; }
@@ -668,7 +826,7 @@ function parseFormula(tokens) {
       consume();
       return { op: 'VAR', name: t, label: t };
     }
-    throw new Error('Token inesperado: "' + t + '".');
+    throw new Error('Símbolo inesperado: "' + t + '".');
   }
   function fmtNode(n) {
     if (n.op === 'VAR' || n.op === '¬') return n.label;
@@ -722,9 +880,21 @@ function loadPreset(val) {
   buildTruthTable();
 }
 
-function toggleStepsCols() {
-  showIntermediate = !showIntermediate;
+function setTableMode(mode) {
+  tableMode = mode;
+  document.getElementById('btnModeStudy').classList.toggle('btn-mode-active', mode === 'study');
+  document.getElementById('btnModeChallenge').classList.toggle('btn-mode-active', mode === 'challenge');
+  document.getElementById('studySummaryBox').style.display = mode === 'study' ? 'block' : 'none';
+  document.getElementById('challengeBox').style.display = mode === 'challenge' ? 'block' : 'none';
   renderTableDOM();
+}
+
+function expectedClassification() {
+  const allTrue = currentRows.every(r => r.finalVal === true);
+  const allFalse = currentRows.every(r => r.finalVal === false);
+  if (allTrue) return 'Tautología';
+  if (allFalse) return 'Contradicción';
+  return 'Contingencia';
 }
 
 function buildTruthTable() {
@@ -746,18 +916,32 @@ function buildTruthTable() {
     collectSubformulas(ast, subs, new Set());
     const interNodes = subs.slice(0, -1);
 
-    const numRows = 1 << vars.length;
+    const n = vars.length;
+    const numRows = 1 << n;
     currentRows = [];
     for (let i = 0; i < numRows; i++) {
       const env = {};
       vars.forEach((v, idx) => {
-        env[v] = ((i >> (vars.length - 1 - idx)) & 1) === 0; // orden ESPE: V primero, luego F
+        env[v] = ((i >> (n - 1 - idx)) & 1) === 0;
       });
-      const interVals = interNodes.map(n => evalAst(n, env));
+      const interVals = interNodes.map(nd => evalAst(nd, env));
       const finalVal = evalAst(ast, env);
       currentRows.push({ env, interVals, finalVal, pred: null, status: null });
     }
     window._ttMeta = { vars, interNodes, ast };
+
+    // Actualizar banner explicativo de combinatoria 2^n
+    const varsHTML = vars.map(v => '<var class="mv">' + v + '</var>').join(', ');
+    const patternParts = vars.map((v, idx) => {
+      const block = 1 << (n - 1 - idx);
+      return '<var class="mv">' + v + '</var> alterna cada <strong>' + block + '</strong> fila' + (block > 1 ? 's' : '');
+    }).join(' · ');
+    document.getElementById('combBanner').innerHTML =
+      '<div><strong>Paso 1 · Combinatoria de entrada:</strong> Detectada' + (n > 1 ? 's ' : ' ') +
+      '<strong>' + n + '</strong> proposición' + (n > 1 ? 'es' : '') + ' simple' + (n > 1 ? 's' : '') + ' (' + varsHTML + '). ' +
+      'Regla de mitades: ' + patternParts + '.</div>' +
+      '<div class="comb-formula mexpr">Filas totales = 2<sup>' + n + '</sup> = ' + numRows + ' combinaciones</div>';
+
     renderTableDOM();
   } catch (e) {
     errBox.textContent = e.message;
@@ -769,32 +953,53 @@ function renderTableDOM() {
   const meta = window._ttMeta;
   if (!meta) return;
   let html = '<table class="tt"><thead><tr>';
-  meta.vars.forEach(v => { html += '<th>' + v + '</th>'; });
-  if (showIntermediate) {
-    meta.interNodes.forEach(n => { html += '<th style="background:#F8FAFC;color:#475569;">' + n.label + '</th>'; });
-  }
-  html += '<th>Tu predicción: ' + meta.ast.label + '</th></tr></thead><tbody>';
+  html += '<th style="width:46px">#</th>';
+  meta.vars.forEach(v => { html += '<th class="mexpr"><var class="mv">' + v + '</var></th>'; });
+  meta.interNodes.forEach(n => {
+    html += '<th class="inter-th mexpr">' + fmtMathHTML(n.label) + '</th>';
+  });
+  html += '<th class="final-th mexpr">' + (tableMode === 'challenge' ? 'Predicción: ' : 'Resultado: ') + fmtMathHTML(meta.ast.label) + '</th>';
+  html += '</tr></thead><tbody>';
 
   currentRows.forEach((row, idx) => {
-    const trClass = row.status === 'ok' ? 'row-ok' : (row.status === 'err' ? 'row-err' : '');
+    const trClass = tableMode === 'challenge'
+      ? (row.status === 'ok' ? 'row-ok' : (row.status === 'err' ? 'row-err' : ''))
+      : '';
     html += '<tr class="' + trClass + '">';
+    html += '<td style="color:#64748B;font-size:12.5px;">' + (idx + 1) + '</td>';
     meta.vars.forEach(v => {
       const val = row.env[v] ? 'V' : 'F';
       html += '<td class="pill-' + val + '">' + val + '</td>';
     });
-    if (showIntermediate) {
-      row.interVals.forEach(iv => {
-        const val = iv ? 'V' : 'F';
-        html += '<td style="color:#475569">' + val + '</td>';
-      });
+    row.interVals.forEach(iv => {
+      const val = iv ? 'V' : 'F';
+      html += '<td style="color:#334155;font-weight:600;">' + val + '</td>';
+    });
+    if (tableMode === 'study') {
+      const fv = row.finalVal ? 'V' : 'F';
+      html += '<td style="background:#F0F7FF;"><span class="pill-' + fv + '" style="font-size:15px;">' + fv + '</span></td>';
+    } else {
+      const pText = row.pred === null ? '?' : (row.pred ? 'V' : 'F');
+      const pClass = row.pred === null ? '' : (row.pred ? 'val-V' : 'val-F');
+      html += '<td><button class="pred-btn ' + pClass + '" onclick="cyclePred(' + idx + ')">' + pText + '</button></td>';
     }
-    const pText = row.pred === null ? '?' : (row.pred ? 'V' : 'F');
-    const pClass = row.pred === null ? '' : (row.pred ? 'val-V' : 'val-F');
-    html += '<td><button class="pred-btn ' + pClass + '" onclick="cyclePred(' + idx + ')">' + pText + '</button></td>';
     html += '</tr>';
   });
   html += '</tbody></table>';
   document.getElementById('tableContainer').innerHTML = html;
+
+  // Resumen automático en Modo Estudio
+  const clas = expectedClassification();
+  const vCount = currentRows.filter(r => r.finalVal).length;
+  const fCount = currentRows.length - vCount;
+  const descMap = {
+    'Tautología': 'todos los resultados de la columna final son <strong>Verdaderos (V)</strong> sin importar los valores de entrada.',
+    'Contradicción': 'todos los resultados de la columna final son <strong>Falsos (F)</strong> en las ' + currentRows.length + ' combinaciones.',
+    'Contingencia': 'la columna final contiene mezcla de valores (<strong>' + vCount + ' V</strong> y <strong>' + fCount + ' F</strong>), por lo que depende de los valores de las proposiciones simples.'
+  };
+  document.getElementById('studySummaryBox').innerHTML =
+    '<strong>Clasificación de la tabla: <span style="color:var(--espe-blue-dark)">' + clas + '</span></strong> — ' + descMap[clas] +
+    ' <span style="color:var(--muted);">(¿Quieres ponerte a prueba? Cambia arriba a <strong>🎯 Modo Reto</strong>).</span>';
 }
 
 function cyclePred(idx) {
@@ -804,21 +1009,13 @@ function cyclePred(idx) {
   renderTableDOM();
 }
 
-function expectedClassification() {
-  const allTrue = currentRows.every(r => r.finalVal === true);
-  const allFalse = currentRows.every(r => r.finalVal === false);
-  if (allTrue) return 'Tautología';
-  if (allFalse) return 'Contradicción';
-  return 'Contingencia';
-}
-
 function checkPredictions() {
   const fb = document.getElementById('retoFeedback');
   const missing = currentRows.some(r => r.pred === null);
   const selRadio = document.querySelector('input[name="clasif"]:checked');
   if (missing || !selRadio) {
     fb.className = 'feedback-msg err';
-    fb.textContent = 'Completa primero tu predicción (V o F) en todas las filas haciendo clic sobre "?" y selecciona si es Tautología, Contradicción o Contingencia.';
+    fb.textContent = 'Haz clic en cada botón "?" de la última columna para predecir V o F y elige abajo si es Tautología, Contradicción o Contingencia.';
     return;
   }
   let wrongRows = [];
@@ -832,14 +1029,14 @@ function checkPredictions() {
 
   if (wrongRows.length === 0 && clasOk) {
     fb.className = 'feedback-msg ok';
-    fb.innerHTML = '<strong>¡Excelente trabajo!</strong> Acertaste todas las filas y clasificaste correctamente la proposición como <strong>' + expClas + '</strong>.';
+    fb.innerHTML = '<strong>¡Correcto!</strong> Todas las filas coinciden con las columnas intermedias y la proposición es una <strong>' + expClas + '</strong>.';
   } else {
     let msg = '';
     if (wrongRows.length > 0) {
-      msg += 'Revisa la(s) fila(s) <strong>' + wrongRows.join(', ') + '</strong> (marcadas en rojo). Activa "Mostrar pasos intermedios" para observar qué conectivo cambió el resultado. ';
+      msg += 'Revisa la(s) fila(s) N.º <strong>' + wrongRows.join(', ') + '</strong> comparando con las columnas intermedias a su izquierda. ';
     }
     if (!clasOk) {
-      msg += 'En la clasificación elegiste <em>' + selRadio.value + '</em>, pero según la columna final corresponde a <strong>' + expClas + '</strong>.';
+      msg += 'Elegiste <em>' + selRadio.value + '</em>, pero según la columna final corresponde a <strong>' + expClas + '</strong>.';
     }
     fb.className = 'feedback-msg err';
     fb.innerHTML = msg;
@@ -847,52 +1044,67 @@ function checkPredictions() {
 }
 
 function fillAllPredictions() {
-  showIntermediate = true;
   currentRows.forEach(r => { r.pred = r.finalVal; r.status = 'ok'; });
   const exp = expectedClassification();
   document.querySelectorAll('input[name="clasif"]').forEach(rad => { rad.checked = (rad.value === exp); });
   renderTableDOM();
   const fb = document.getElementById('retoFeedback');
   fb.className = 'feedback-msg ok';
-  fb.innerHTML = 'Tabla resuelta con pasos intermedios visibles. Resultado global: <strong>' + exp + '</strong>.';
+  fb.innerHTML = 'Solución completada. Clasificación: <strong>' + exp + '</strong>.';
 }
 
-/* ==================== CUANTIFICADORES (1.2) ==================== */
+/* ==================== CUANTIFICADORES (1.2 - ARITMÉTICA BÁSICA) ==================== */
 function updateQuantifiers() {
-  const A = [1, 2, 3, 4, 5];
+  const A = [1, 2, 3, 4, 6];
   const qType = document.getElementById('qType').value;
   const qPred = document.getElementById('qPred').value;
   const preds = {
-    lt6: { txt: 'x + 2 ≤ 7', negTxt: 'x + 2 > 7', fn: x => x + 2 <= 7 },
-    even: { txt: 'x es par', negTxt: 'x no es par (es impar)', fn: x => x % 2 === 0 },
-    eq4: { txt: 'x + 3 = 7', negTxt: 'x + 3 ≠ 7', fn: x => x + 3 === 7 },
-    gt9: { txt: 'x² > 30', negTxt: 'x² ≤ 30', fn: x => x * x > 30 }
+    div12: {
+      txt: '<var class="mv">x</var> divide exactamente a 12',
+      negTxt: '<var class="mv">x</var> no divide exactamente a 12',
+      fn: x => 12 % x === 0
+    },
+    even: {
+      txt: '<var class="mv">x</var> es número par',
+      negTxt: '<var class="mv">x</var> es número impar',
+      fn: x => x % 2 === 0
+    },
+    eq7: {
+      txt: '<var class="mv">x</var> + 3 = 7',
+      negTxt: '<var class="mv">x</var> + 3 ≠ 7',
+      fn: x => x + 3 === 7
+    },
+    eq15: {
+      txt: '2<var class="mv">x</var> = 15',
+      negTxt: '2<var class="mv">x</var> ≠ 15',
+      fn: x => 2 * x === 15
+    }
   };
   const p = preds[qPred];
   const results = A.map(x => ({ x, ok: p.fn(x) }));
   document.getElementById('quantChips').innerHTML = results.map(r =>
-    '<div class="q-chip ' + (r.ok ? 'true' : 'false') + '">P(' + r.x + ') ≡ <strong>' + (r.ok ? 'V' : 'F') + '</strong></div>'
+    '<div class="q-chip mexpr ' + (r.ok ? 'true' : 'false') + '"><var class="mv">P</var>(' + r.x + ') ≡ <strong>' + (r.ok ? 'V' : 'F') + '</strong></div>'
   ).join('');
 
   const propVal = qType === 'forall' ? results.every(r => r.ok) : results.some(r => r.ok);
-  const sym = qType === 'forall' ? '∀x ∈ A' : '∃x ∈ A';
-  const negSym = qType === 'forall' ? '∃x ∈ A' : '∀x ∈ A';
+  const sym = qType === 'forall' ? '∀<var class="mv">x</var> ∈ <strong>A</strong>' : '∃<var class="mv">x</var> ∈ <strong>A</strong>';
+  const negSym = qType === 'forall' ? '∃<var class="mv">x</var> ∈ <strong>A</strong>' : '∀<var class="mv">x</var> ∈ <strong>A</strong>';
   const reason = qType === 'forall'
-    ? (propVal ? 'todos los elementos de A hacen verdadera a P(x).' : 'basta un contraejemplo en A donde P(x) es F para que ∀ sea Falsa.')
-    : (propVal ? 'existe al menos un valor en A que cumple P(x).' : 'ningún elemento de A cumple P(x).');
+    ? (propVal ? 'los 5 elementos del conjunto A cumplen la condición.' : 'basta un contraejemplo en A con valor F para que el cuantificador universal sea Falso.')
+    : (propVal ? 'existe al menos un elemento en A que vuelve verdadera la condición.' : 'ningún elemento del conjunto A cumple la igualdad.');
 
   document.getElementById('quantSummary').innerHTML =
-    '<div><strong>Proposición p:</strong> <code>' + sym + ' : ' + p.txt + '</code> &nbsp;⇒&nbsp; Valor de verdad: <span class="pill-' + (propVal ? 'V' : 'F') + '">' + (propVal ? 'Verdadera (V)' : 'Falsa (F)') + '</span> porque ' + reason + '</div>' +
-    '<div style="margin-top:5px;"><strong>Negación ¬p (Ley de De Morgan para cuantificadores):</strong> <code>' + negSym + ' : ' + p.negTxt + '</code> &nbsp;⇒&nbsp; Valor de verdad: <span class="pill-' + (!propVal ? 'V' : 'F') + '">' + (!propVal ? 'Verdadera (V)' : 'Falsa (F)') + '</span> (se invierte el cuantificador y se niega la función proposicional).</div>';
+    '<div><strong>Proposición <span class="mexpr"><var class="mv">p</var></span>:</strong> <span class="mexpr">' + sym + ' : ' + p.txt + '</span> &nbsp;⇒&nbsp; <span class="pill-' + (propVal ? 'V' : 'F') + '">' + (propVal ? 'Verdadera (V)' : 'Falsa (F)') + '</span> porque ' + reason + '</div>' +
+    '<div style="margin-top:5px;"><strong>Negación <span class="mexpr">¬<var class="mv">p</var></span>:</strong> <span class="mexpr">' + negSym + ' : ' + p.negTxt + '</span> &nbsp;⇒&nbsp; <span class="pill-' + (!propVal ? 'V' : 'F') + '">' + (!propVal ? 'Verdadera (V)' : 'Falsa (F)') + '</span> (cambia ∀ ↔ ∃ y se niega la función proposicional).</div>';
 }
 
-/* ==================== PESTAÑA 2: CIRCUITO Y FLUJO DE AGUA ==================== */
+/* ==================== PESTAÑA 2: CIRCUITO Y AGUA ==================== */
 let physState = { p: true, q: true };
 
 function togglePhysVar(v) {
   physState[v] = !physState[v];
   const btn = document.getElementById(v === 'p' ? 'btnVarP' : 'btnVarQ');
-  btn.textContent = v + ' = ' + (physState[v] ? 'V' : 'F');
+  btn.innerHTML = '<span class="mexpr"><var class="mv">' + v + '</var> = ' + (physState[v] ? 'V' : 'F') + '</span>';
   btn.className = 'toggle-var ' + (physState[v] ? 'on' : 'off');
   renderPhysical();
 }
@@ -917,35 +1129,35 @@ function renderPhysical() {
   const offColor = '#475569';
   const wireOut = out ? activeColor : offColor;
 
-  function swGraphic(x, y, closed, label) {
+  function swGraphic(x, y, closed, varSvg, valTxt) {
     const c = closed ? activeColor : '#EF4444';
     const y2 = closed ? y : y - 16;
     return '<g>' +
       '<circle cx="' + x + '" cy="' + y + '" r="4" fill="#E2E8F0"/>' +
       '<circle cx="' + (x + 56) + '" cy="' + y + '" r="4" fill="#E2E8F0"/>' +
       '<line x1="' + x + '" y1="' + y + '" x2="' + (x + 54) + '" y2="' + y2 + '" stroke="' + c + '" stroke-width="5" stroke-linecap="round"/>' +
-      '<text x="' + (x + 28) + '" y="' + (y - 22) + '" fill="#F8FAFC" font-size="14" font-weight="bold" text-anchor="middle">' + label + '</text>' +
-      '</g>';
+      '<text x="' + (x + 28) + '" y="' + (y - 22) + '" fill="#F8FAFC" font-size="15" font-family="Cambria Math, Times New Roman, serif" text-anchor="middle">' +
+      varSvg + ' = <tspan font-weight="bold" font-family="Segoe UI, sans-serif">' + valTxt + '</tspan></text></g>';
   }
 
   let paths = '';
   if (op === 'AND') {
     paths =
       '<line x1="40" y1="105" x2="130" y2="105" stroke="' + activeColor + '" stroke-width="5"/>' +
-      swGraphic(130, 105, p, 'p = ' + (p ? 'V' : 'F')) +
+      swGraphic(130, 105, p, '<tspan font-style="italic">p</tspan>', p ? 'V' : 'F') +
       '<line x1="186" y1="105" x2="250" y2="105" stroke="' + (p ? activeColor : offColor) + '" stroke-width="5"/>' +
-      swGraphic(250, 105, q, 'q = ' + (q ? 'V' : 'F')) +
+      swGraphic(250, 105, q, '<tspan font-style="italic">q</tspan>', q ? 'V' : 'F') +
       '<line x1="306" y1="105" x2="410" y2="105" stroke="' + wireOut + '" stroke-width="5"/>';
   } else if (op === 'OR' || op === 'IMP') {
     const topClosed = op === 'OR' ? p : !p;
-    const topLabel = op === 'OR' ? ('p = ' + (p ? 'V' : 'F')) : ('¬p = ' + (!p ? 'V' : 'F'));
+    const topVar = op === 'OR' ? '<tspan font-style="italic">p</tspan>' : '¬<tspan font-style="italic">p</tspan>';
     paths =
       '<line x1="40" y1="105" x2="105" y2="105" stroke="' + activeColor + '" stroke-width="5"/>' +
       '<line x1="105" y1="55" x2="105" y2="155" stroke="' + activeColor + '" stroke-width="5"/>' +
       '<line x1="105" y1="55" x2="180" y2="55" stroke="' + activeColor + '" stroke-width="5"/>' +
       '<line x1="105" y1="155" x2="180" y2="155" stroke="' + activeColor + '" stroke-width="5"/>' +
-      swGraphic(180, 55, topClosed, topLabel) +
-      swGraphic(180, 155, q, 'q = ' + (q ? 'V' : 'F')) +
+      swGraphic(180, 55, topClosed, topVar, topClosed ? 'V' : 'F') +
+      swGraphic(180, 155, q, '<tspan font-style="italic">q</tspan>', q ? 'V' : 'F') +
       '<line x1="236" y1="55" x2="320" y2="55" stroke="' + (topClosed ? activeColor : offColor) + '" stroke-width="5"/>' +
       '<line x1="236" y1="155" x2="320" y2="155" stroke="' + (q ? activeColor : offColor) + '" stroke-width="5"/>' +
       '<line x1="320" y1="55" x2="320" y2="155" stroke="' + wireOut + '" stroke-width="5"/>' +
@@ -953,21 +1165,20 @@ function renderPhysical() {
   } else if (op === 'NOT') {
     paths =
       '<line x1="40" y1="105" x2="175" y2="105" stroke="' + activeColor + '" stroke-width="5"/>' +
-      swGraphic(175, 105, !p, 'Inversor ¬p = ' + (!p ? 'V' : 'F')) +
+      swGraphic(175, 105, !p, '¬<tspan font-style="italic">p</tspan>', !p ? 'V' : 'F') +
       '<line x1="231" y1="105" x2="410" y2="105" stroke="' + wireOut + '" stroke-width="5"/>';
   } else {
-    // XOR / BIC: dos ramas paralelas equivalentes
     const r1 = op === 'XOR' ? (p && !q) : (p && q);
     const r2 = op === 'XOR' ? (!p && q) : (!p && !q);
-    const lbl1 = op === 'XOR' ? 'Rama (p ∧ ¬q)' : 'Rama (p ∧ q)';
-    const lbl2 = op === 'XOR' ? 'Rama (¬p ∧ q)' : 'Rama (¬p ∧ ¬q)';
+    const v1 = op === 'XOR' ? '<tspan font-style="italic">p</tspan> ∧ ¬<tspan font-style="italic">q</tspan>' : '<tspan font-style="italic">p</tspan> ∧ <tspan font-style="italic">q</tspan>';
+    const v2 = op === 'XOR' ? '¬<tspan font-style="italic">p</tspan> ∧ <tspan font-style="italic">q</tspan>' : '¬<tspan font-style="italic">p</tspan> ∧ ¬<tspan font-style="italic">q</tspan>';
     paths =
       '<line x1="40" y1="105" x2="105" y2="105" stroke="' + activeColor + '" stroke-width="5"/>' +
       '<line x1="105" y1="55" x2="105" y2="155" stroke="' + activeColor + '" stroke-width="5"/>' +
       '<line x1="105" y1="55" x2="180" y2="55" stroke="' + activeColor + '" stroke-width="5"/>' +
       '<line x1="105" y1="155" x2="180" y2="155" stroke="' + activeColor + '" stroke-width="5"/>' +
-      swGraphic(180, 55, r1, lbl1 + ': ' + (r1 ? 'V' : 'F')) +
-      swGraphic(180, 155, r2, lbl2 + ': ' + (r2 ? 'V' : 'F')) +
+      swGraphic(180, 55, r1, v1, r1 ? 'V' : 'F') +
+      swGraphic(180, 155, r2, v2, r2 ? 'V' : 'F') +
       '<line x1="236" y1="55" x2="320" y2="55" stroke="' + (r1 ? activeColor : offColor) + '" stroke-width="5"/>' +
       '<line x1="236" y1="155" x2="320" y2="155" stroke="' + (r2 ? activeColor : offColor) + '" stroke-width="5"/>' +
       '<line x1="320" y1="55" x2="320" y2="155" stroke="' + wireOut + '" stroke-width="5"/>' +
@@ -977,10 +1188,10 @@ function renderPhysical() {
   const srcTitle = mode === 'circuit' ? 'Fuente +' : 'Entrada H₂O';
   const outWidget = mode === 'circuit'
     ? '<circle cx="445" cy="105" r="28" fill="' + (out ? '#FEF08A' : '#1E293B') + '" stroke="' + wireOut + '" stroke-width="4"/>' +
-      '<text x="445" y="111" fill="' + (out ? '#713F12' : '#94A3B8') + '" font-size="14" font-weight="bold" text-anchor="middle">' + (out ? 'ENCENDIDO' : 'APAGADO') + '</text>'
+      '<text x="445" y="110" fill="' + (out ? '#713F12' : '#94A3B8') + '" font-size="13" font-weight="bold" text-anchor="middle">' + (out ? 'V (ON)' : 'F (OFF)') + '</text>'
     : '<rect x="415" y="72" width="64" height="66" rx="8" fill="#0F172A" stroke="' + wireOut + '" stroke-width="4"/>' +
       (out ? '<rect x="419" y="92" width="56" height="42" rx="4" fill="#38BDF8"/>' : '') +
-      '<text x="447" y="118" fill="#F8FAFC" font-size="12" font-weight="bold" text-anchor="middle">' + (out ? 'CON FLUJO' : 'SIN AGUA') + '</text>';
+      '<text x="447" y="118" fill="#F8FAFC" font-size="12" font-weight="bold" text-anchor="middle">' + (out ? 'V (FLUYE)' : 'F (SECO)') + '</text>';
 
   document.getElementById('svgContainer').innerHTML =
     '<svg viewBox="0 0 510 205" style="width:100%;height:auto;display:block;">' +
@@ -989,18 +1200,26 @@ function renderPhysical() {
     paths + outWidget + '</svg>';
 
   const explainMap = {
-    AND: '<strong>Conjunción (p ∧ q):</strong> Conexión <em>en serie</em>. El flujo solo llega al final cuando <strong>ambos</strong> pasos están cerrados (V ∧ V ≡ V). Si cualquiera falla, se corta el paso.',
-    OR: '<strong>Disyunción inclusiva (p ∨ q):</strong> Conexión <em>en paralelo</em>. Basta con que <strong>al menos una</strong> rama esté abierta al paso (V) para encender la salida; solo da F cuando ambas son F.',
-    XOR: '<strong>Disyunción exclusiva (p ⊻ q):</strong> Equivale a nuestro "ó" excluyente: se activa únicamente cuando <strong>una es V y la otra es F</strong>. Si ambas son iguales, se anula (F).',
-    IMP: '<strong>Condicional (p ⇒ q ≡ ¬p ∨ q):</strong> ¡Una verdad jamás puede implicar una falsedad! Observa cómo equivale a un paralelo entre <code>¬p</code> y <code>q</code>: solo se apaga (F) cuando el antecedente <code>p</code> es V y el consecuente <code>q</code> es F.',
-    BIC: '<strong>Bicondicional (p ⇔ q):</strong> Detector de coincidencia ("si y solamente si"): conduce cuando ambas proposiciones tienen <strong>el mismo valor de verdad</strong> (ambas V o ambas F).',
-    NOT: '<strong>Negación (¬p):</strong> Invierte el estado lógico: cuando <code>p = V</code> la salida pasa a <code>F</code>, y cuando <code>p = F</code> la salida pasa a <code>V</code>.'
+    AND: '<strong>Conjunción (<span class="mexpr"><var class="mv">p</var> ∧ <var class="mv">q</var></span>):</strong> Conexión <em>en serie</em>. El flujo llega al final únicamente cuando <strong>ambos</strong> pasos están cerrados (<span class="mexpr">V ∧ V ≡ V</span>).',
+    OR: '<strong>Disyunción inclusiva (<span class="mexpr"><var class="mv">p</var> ∨ <var class="mv">q</var></span>):</strong> Conexión <em>en paralelo</em>. Basta con que <strong>al menos una</strong> rama sea V para tener paso.',
+    XOR: '<strong>Disyunción exclusiva (<span class="mexpr"><var class="mv">p</var> <span class="xor-espe">∨</span> <var class="mv">q</var></span>):</strong> Equivale a nuestro "ó" excluyente: vale V solo cuando una es V y la otra es F.',
+    IMP: '<strong>Condicional (<span class="mexpr"><var class="mv">p</var> ⇒ <var class="mv">q</var> ≡ ¬<var class="mv">p</var> ∨ <var class="mv">q</var></span>):</strong> Solo resulta Falsa cuando la hipótesis <span class="mexpr"><var class="mv">p</var></span> se cumple (V) y la tesis <span class="mexpr"><var class="mv">q</var></span> falla (F).',
+    BIC: '<strong>Bicondicional (<span class="mexpr"><var class="mv">p</var> ⇔ <var class="mv">q</var></span>):</strong> Vale V cuando <span class="mexpr"><var class="mv">p</var></span> y <span class="mexpr"><var class="mv">q</var></span> coinciden en el mismo valor de verdad.',
+    NOT: '<strong>Negación (<span class="mexpr">¬<var class="mv">p</var></span>):</strong> Invierte el valor de verdad de <span class="mexpr"><var class="mv">p</var></span>.'
   };
   document.getElementById('physExplain').innerHTML = explainMap[op];
 
-  // Mini tabla con fila resaltada
-  const symMap = { AND: 'p ∧ q', OR: 'p ∨ q', XOR: 'p ⊻ q', IMP: 'p ⇒ q', BIC: 'p ⇔ q', NOT: '¬p' };
-  let tt = '<table class="tt mini-tt"><thead><tr><th>p</th>' + (op === 'NOT' ? '' : '<th>q</th>') + '<th>' + symMap[op] + '</th></tr></thead><tbody>';
+  const symMap = {
+    AND: '<var class="mv">p</var> ∧ <var class="mv">q</var>',
+    OR: '<var class="mv">p</var> ∨ <var class="mv">q</var>',
+    XOR: '<var class="mv">p</var> <span class="xor-espe">∨</span> <var class="mv">q</var>',
+    IMP: '<var class="mv">p</var> ⇒ <var class="mv">q</var>',
+    BIC: '<var class="mv">p</var> ⇔ <var class="mv">q</var>',
+    NOT: '¬<var class="mv">p</var>'
+  };
+  let tt = '<table class="tt mini-tt"><thead><tr><th class="mexpr"><var class="mv">p</var></th>' +
+    (op === 'NOT' ? '' : '<th class="mexpr"><var class="mv">q</var></th>') +
+    '<th class="mexpr">' + symMap[op] + '</th></tr></thead><tbody>';
   const pairs = op === 'NOT' ? [[true, true], [false, true]] : [[true, true], [true, false], [false, true], [false, false]];
   pairs.forEach(([vp, vq]) => {
     const active = op === 'NOT' ? (vp === p) : (vp === p && vq === q);
@@ -1014,30 +1233,108 @@ function renderPhysical() {
   document.getElementById('miniTTContainer').innerHTML = tt;
 }
 
-/* ==================== PESTAÑA 3: PIZARRA ESTILO AXIOMA ==================== */
+/* ==================== PESTAÑA 3: EXPLORADOR VISUAL DE LEYES LÓGICAS ==================== */
+const visualLaws = [
+  {
+    eq: '¬(p ∧ q)  ≡  ¬p ∨ ¬q',
+    intuition: 'Negar que "se cumplen ambas cosas a la vez" equivale a decir que "falla la primera O falla la segunda". Observa cómo las 4 filas dan idéntico resultado:',
+    vars: ['p', 'q'],
+    leftLbl: '¬(p ∧ q)', leftFn: (p, q) => !(p && q),
+    rightLbl: '¬p ∨ ¬q', rightFn: (p, q) => (!p) || (!q)
+  },
+  {
+    eq: '¬(p ∨ q)  ≡  ¬p ∧ ¬q',
+    intuition: 'Negar que "ocurre p o q" significa que "NO ocurre p Y TAMPOCO ocurre q" (solo es V cuando ambas son F):',
+    vars: ['p', 'q'],
+    leftLbl: '¬(p ∨ q)', leftFn: (p, q) => !(p || q),
+    rightLbl: '¬p ∧ ¬q', rightFn: (p, q) => (!p) && (!q)
+  },
+  {
+    eq: '(p ⇒ q)  ≡  (¬p ∨ q)',
+    intuition: 'Esta es la llave maestra para simplificar condicionales: "Si p entonces q" tiene exactamente la misma tabla que "No p, o bien q":',
+    vars: ['p', 'q'],
+    leftLbl: 'p ⇒ q', leftFn: (p, q) => (!p) || q,
+    rightLbl: '¬p ∨ q', rightFn: (p, q) => (!p) || q
+  },
+  {
+    eq: '¬(p ⇒ q)  ≡  p ∧ ¬q',
+    intuition: 'Una promesa condicional NO se niega con otro condicional: queda refutada únicamente cuando la hipótesis p es V y la conclusión q es F:',
+    vars: ['p', 'q'],
+    leftLbl: '¬(p ⇒ q)', leftFn: (p, q) => !((!p) || q),
+    rightLbl: 'p ∧ ¬q', rightFn: (p, q) => p && (!q)
+  },
+  {
+    eq: '(p ⇒ q)  ≡  (¬q ⇒ ¬p)',
+    intuition: 'Base de las demostraciones indirectas: demostrar "Si p entonces q" es 100 % equivalente a demostrar su contrarrecíproco "Si no q, entonces no p":',
+    vars: ['p', 'q'],
+    leftLbl: 'Directa: p ⇒ q', leftFn: (p, q) => (!p) || q,
+    rightLbl: 'Contrarrecíproco: ¬q ⇒ ¬p', rightFn: (p, q) => q || (!p)
+  },
+  {
+    eq: 'p ∧ (p ∨ q)  ≡  p',
+    intuition: 'Ley de Absorción: el término redundante (p ∨ q) queda absorbido por p; fíjate que el resultado final depende exclusivamente del valor de p:',
+    vars: ['p', 'q'],
+    leftLbl: 'p ∧ (p ∨ q)', leftFn: (p, q) => p && (p || q),
+    rightLbl: 'p', rightFn: (p, q) => p
+  },
+  {
+    eq: 'p ∨ ¬p ≡ V    ·    p ∨ F ≡ p',
+    intuition: 'Complemento e Identidad (análogo en conjuntos a A ∪ Aᶜ = U y A ∪ ∅ = A): unir p con Falso no añade nada y deja intacto a p:',
+    vars: ['p'],
+    leftLbl: 'p ∨ F', leftFn: (p) => p || false,
+    rightLbl: 'p', rightFn: (p) => p
+  }
+];
+
+function renderVisualLaw() {
+  const idx = parseInt(document.getElementById('lawSelect').value, 10);
+  const law = visualLaws[idx];
+  document.getElementById('lawBanner').innerHTML = '<span class="mexpr"><strong>' + fmtMathHTML(law.eq) + '</strong></span>';
+  document.getElementById('lawIntuition').textContent = law.intuition;
+
+  const combos = law.vars.length === 1 ? [[true], [false]] : [[true, true], [true, false], [false, true], [false, false]];
+  function buildSideTable(title, fn) {
+    let h = '<div class="law-side"><h4 style="margin:0 0 6px;color:var(--espe-blue-dark);" class="mexpr">' + fmtMathHTML(title) + '</h4>';
+    h += '<table class="tt"><thead><tr>';
+    law.vars.forEach(v => { h += '<th class="mexpr"><var class="mv">' + v + '</var></th>'; });
+    h += '<th class="final-th mexpr">' + fmtMathHTML(title) + '</th></tr></thead><tbody>';
+    combos.forEach(c => {
+      const res = fn(c[0], c[1]);
+      h += '<tr>';
+      c.forEach(v => { h += '<td>' + (v ? 'V' : 'F') + '</td>'; });
+      h += '<td class="pill-' + (res ? 'V' : 'F') + '" style="background:#F0F9FF;">' + (res ? 'V' : 'F') + '</td></tr>';
+    });
+    h += '</tbody></table></div>';
+    return h;
+  }
+  document.getElementById('lawComparison').innerHTML =
+    buildSideTable(law.leftLbl, law.leftFn) + buildSideTable(law.rightLbl, law.rightFn);
+}
+
+/* ==================== PESTAÑA 4: PIZARRA ESTILO AXIOMA ==================== */
 const axiomaLessons = [
   {
     title: 'Subtítulo 1.1 · ¿Por qué la negación de (p ⇒ q) NO es (¬p ⇒ ¬q)?',
     steps: [
       {
-        formula: '<span class="hl-cyan">¬(p ⇒ q)</span>',
+        formula: '<span class="hl-cyan">¬(<var class="mv">p</var> ⇒ <var class="mv">q</var>)</span>',
         law: 'Expresión inicial',
-        note: 'Queremos negar el condicional "Si llueve en Pomasqui (p), entonces el patio se moja (q)". Un error muy común es negar ambos lados con otro condicional; veamos qué ocurre realmente paso a paso.'
+        note: 'Queremos negar "Si llueve en Pomasqui (p), entonces el patio se moja (q)". Veamos qué producen las leyes lógicas.'
       },
       {
-        formula: '≡ ¬( <span class="hl-gold">¬p ∨ q</span> )',
+        formula: '≡ ¬( <span class="hl-gold">¬<var class="mv">p</var> ∨ <var class="mv">q</var></span> )',
         law: 'Equivalencia del condicional',
-        note: 'Primero reescribimos el condicional p ⇒ q usando conectivos básicos: recordar del sílabo ESPE que (p ⇒ q) ≡ (¬p ∨ q).'
+        note: 'Sustituimos el condicional usando la ley oficial del sílabo: (p ⇒ q) ≡ (¬p ∨ q).'
       },
       {
-        formula: '≡ <span class="hl-cyan">¬(¬p)</span> <span class="hl-rose">∧</span> <span class="hl-cyan">¬q</span>',
+        formula: '≡ <span class="hl-cyan">¬(¬<var class="mv">p</var>)</span> <span class="hl-rose">∧</span> <span class="hl-cyan">¬<var class="mv">q</var></span>',
         law: 'Ley de De Morgan',
-        note: 'Al entrar la negación al paréntesis, la disyunción (∨) cambia a conjunción (∧) y se niega cada término por separado.'
+        note: 'Al ingresar la negación al paréntesis, la disyunción (∨) gira a conjunción (∧) y niega cada término.'
       },
       {
-        formula: '≡ <span class="hl-ok">p ∧ ¬q</span>',
+        formula: '≡ <span class="hl-ok"><var class="mv">p</var> ∧ ¬<var class="mv">q</var></span>',
         law: 'Ley de Involución ¬(¬p) ≡ p',
-        note: 'La doble negación de p vuelve a ser p. Conclusión clave para exámenes de ingreso: un condicional solo se refuta mostrando que se cumple la hipótesis (p) Y NO se cumple la tesis (¬q).'
+        note: 'La doble negación se simplifica a p. Resultado: se cumple p (V) y no se cumple q (¬q = V).'
       }
     ]
   },
@@ -1045,29 +1342,29 @@ const axiomaLessons = [
     title: 'Subtítulo 1.1 · Demostración algebraica de una Tautología (sin tabla)',
     steps: [
       {
-        formula: '<span class="hl-cyan">p ⇒ (p ∨ q)</span>',
+        formula: '<span class="hl-cyan"><var class="mv">p</var> ⇒ (<var class="mv">p</var> ∨ <var class="mv">q</var>)</span>',
         law: 'Proposición dada (ESPE pág. 15)',
-        note: 'Queremos demostrar con leyes lógicas que esta expresión siempre vale Verdadero (V), sin necesidad de construir toda la tabla.'
+        note: 'Demostraremos mediante leyes del álgebra proposicional que equivale siempre a Verdadero (V).'
       },
       {
-        formula: '≡ <span class="hl-gold">¬p</span> ∨ (p ∨ q)',
+        formula: '≡ <span class="hl-gold">¬<var class="mv">p</var></span> ∨ (<var class="mv">p</var> ∨ <var class="mv">q</var>)',
         law: 'Equivalencia del condicional',
-        note: 'Transformamos el condicional principal A ⇒ B en ¬A ∨ B, donde A es p y B es (p ∨ q).'
+        note: 'Aplicamos A ⇒ B ≡ ¬A ∨ B sobre el conector principal.'
       },
       {
-        formula: '≡ <span class="hl-cyan">(¬p ∨ p)</span> ∨ q',
+        formula: '≡ <span class="hl-cyan">(¬<var class="mv">p</var> ∨ <var class="mv">p</var>)</span> ∨ <var class="mv">q</var>',
         law: 'Propiedad Asociativa',
-        note: 'Como ambos conectivos son disyunciones (∨), reagrupamos ¬p junto con p.'
+        note: 'Agrupamos ¬p con p ya que ambos conectivos son disyunciones (∨).'
       },
       {
-        formula: '≡ <span class="hl-gold">V</span> ∨ q',
+        formula: '≡ <span class="hl-gold">V</span> ∨ <var class="mv">q</var>',
         law: 'Ley del Complemento (¬p ∨ p ≡ V)',
-        note: 'Cualquier proposición unida con su negación mediante "o" siempre es Verdadera (V).'
+        note: 'Toda proposición en disyunción con su negación es siempre Verdadera (V).'
       },
       {
         formula: '≡ <span class="hl-ok">V  (Tautología demostrada)</span>',
         law: 'Ley de Identidad (V ∨ q ≡ V)',
-        note: 'Verdadero en disyunción con cualquier proposición q da siempre V. Por tanto, p ⇒ (p ∨ q) es una Tautología.'
+        note: 'Verdadero unido mediante "o" con cualquier proposición q resulta siempre V.'
       }
     ]
   },
@@ -1075,24 +1372,24 @@ const axiomaLessons = [
     title: 'Subtítulo 1.2 · Negación rigurosa con Cuantificadores (∀ y ∃)',
     steps: [
       {
-        formula: 'p :  <span class="hl-cyan">∀x ∈ ℝ</span> :  <span class="hl-gold">x + 3 = 7</span>',
-        law: 'Proposición cuantificada (Falsa)',
-        note: 'Afirma que PARA TODO número real x se cumple x + 3 = 7. Sabemos que es Falsa (por ejemplo, con x = 1 da 4 ≠ 7).'
+        formula: '<var class="mv">p</var> :  <span class="hl-cyan">∀<var class="mv">x</var> ∈ ℝ</span> :  <span class="hl-gold"><var class="mv">x</var> + 3 = 7</span>',
+        law: 'Proposición universal (Falsa)',
+        note: 'Afirma que para cualquier número real x se cumple x + 3 = 7 (falso para x = 1, por ejemplo).'
       },
       {
-        formula: '¬p :  ¬ [ <span class="hl-cyan">∀x ∈ ℝ</span> :  <span class="hl-gold">x + 3 = 7</span> ]',
+        formula: '¬<var class="mv">p</var> :  ¬ [ <span class="hl-cyan">∀<var class="mv">x</var> ∈ ℝ</span> :  <span class="hl-gold"><var class="mv">x</var> + 3 = 7</span> ]',
         law: 'Planteamiento de la negación',
-        note: 'Para negar una proposición universal no basta cambiar "=" por "≠": debemos negar tanto el cuantificador como la función proposicional.'
+        note: 'Debemos aplicar la negación tanto al cuantificador como a la igualdad.'
       },
       {
-        formula: '¬p :  <span class="hl-ok">∃x ∈ ℝ</span> :  <span class="hl-rose">¬(x + 3 = 7)</span>',
-        law: 'De Morgan de cuantificadores',
-        note: 'La negación de "Para todo" (∀) se transforma en "Existe al menos un" (∃), pasando la negación hacia P(x).'
+        formula: '¬<var class="mv">p</var> :  <span class="hl-ok">∃<var class="mv">x</var> ∈ ℝ</span> :  <span class="hl-rose">¬(<var class="mv">x</var> + 3 = 7)</span>',
+        law: 'Negación del cuantificador universal',
+        note: 'El cuantificador universal (∀) cambia a existencial (∃).'
       },
       {
-        formula: '¬p :  <span class="hl-ok">∃x ∈ ℝ :  x + 3 ≠ 7</span>   ≡   <span class="hl-ok">V</span>',
-        law: 'Forma simplificada final',
-        note: 'Se lee: "Existe al menos un número real x tal que x + 3 ≠ 7", lo cual es Verdadero (por ejemplo x = 0).'
+        formula: '¬<var class="mv">p</var> :  <span class="hl-ok">∃<var class="mv">x</var> ∈ ℝ :  <var class="mv">x</var> + 3 ≠ 7</span>   ≡   <span class="hl-ok">V</span>',
+        law: 'Proposición negada final',
+        note: 'Existe al menos un número real x tal que x + 3 ≠ 7 (Verdadera).'
       }
     ]
   },
@@ -1100,24 +1397,24 @@ const axiomaLessons = [
     title: 'Subtítulo 1.3 · Método Indirecto por Contrarrecíproco',
     steps: [
       {
-        formula: 'Teorema (p ⇒ q):  Si <span class="hl-cyan">3n + 2 es impar</span> ⇒ <span class="hl-gold">n es impar</span>',
+        formula: 'Teorema (<var class="mv">p</var> ⇒ <var class="mv">q</var>):  Si <span class="hl-cyan">3<var class="mv">n</var> + 2 es impar</span> ⇒ <span class="hl-gold"><var class="mv">n</var> es impar</span>',
         law: 'Enunciado con n ∈ ℤ',
-        note: 'Ir directo desde "3n + 2 = 2k + 1" obliga a despejar fracciones. Miremos qué limpio sale usando el método indirecto (contrarrecíproco).'
+        note: 'Aplicaremos el método indirecto por contrarrecíproco para evitar despejes con fracciones.'
       },
       {
-        formula: 'Contrarrecíproco (¬q ⇒ ¬p):  Si <span class="hl-gold">n es par</span> ⇒ <span class="hl-cyan">3n + 2 es par</span>',
+        formula: 'Contrarrecíproco (¬<var class="mv">q</var> ⇒ ¬<var class="mv">p</var>):  Si <span class="hl-gold"><var class="mv">n</var> es par</span> ⇒ <span class="hl-cyan">3<var class="mv">n</var> + 2 es par</span>',
         law: '(p ⇒ q) ≡ (¬q ⇒ ¬p)',
-        note: 'Por equivalencia lógica, demostrar p ⇒ q es exactamente igual a asumir ¬q (n NO es impar, o sea n es par) y deducir ¬p (3n + 2 es par).'
+        note: 'Intercambiamos y negamos hipótesis y tesis: suponemos n par y demostramos que 3n + 2 resulta par.'
       },
       {
-        formula: 'Sea <span class="hl-gold">n = 2k</span> (k ∈ ℤ)  ⇒  3n + 2 = 3(<span class="hl-gold">2k</span>) + 2 = 6k + 2',
-        law: 'Definición de número par y sustitución',
-        note: 'Sustituimos n = 2k directamente en la expresión algebraica.'
+        formula: 'Sea <span class="hl-gold"><var class="mv">n</var> = 2<var class="mv">k</var></span> (<var class="mv">k</var> ∈ ℤ)  ⇒  3<var class="mv">n</var> + 2 = 3(<span class="hl-gold">2<var class="mv">k</var></span>) + 2 = 6<var class="mv">k</var> + 2',
+        law: 'Definición de número par',
+        note: 'Sustituimos n = 2k en la expresión 3n + 2.'
       },
       {
-        formula: '3n + 2 = <span class="hl-ok">2(3k + 1)</span>  ⇒  es múltiplo de 2 (<span class="hl-ok">par</span>)  ∎',
+        formula: '3<var class="mv">n</var> + 2 = <span class="hl-ok">2(3<var class="mv">k</var> + 1)</span>  ⇒  múltiplo de 2 (<span class="hl-ok">par</span>)',
         law: 'Factor común y conclusión',
-        note: 'Como 3k + 1 es entero, 2(3k + 1) es par (¬p cumplido). Queda demostrado el teorema original sin un solo despeje fraccionario.'
+        note: 'Como 3k + 1 es un entero, 2(3k + 1) es par. Queda demostrado el teorema.'
       }
     ]
   }
@@ -1154,59 +1451,39 @@ function renderAxioma() {
 
 function nextAxiomaStep() {
   const lesson = axiomaLessons[axIdx];
-  if (axStep < lesson.steps.length - 1) {
-    axStep++;
-    renderAxioma();
-  } else {
-    stopAxiomaTimer();
-  }
+  if (axStep < lesson.steps.length - 1) { axStep++; renderAxioma(); }
+  else stopAxiomaTimer();
 }
-
 function prevAxiomaStep() {
   stopAxiomaTimer();
-  if (axStep > 0) {
-    axStep--;
-    renderAxioma();
-  }
+  if (axStep > 0) { axStep--; renderAxioma(); }
 }
-
 function resetAxioma() {
   stopAxiomaTimer();
   axStep = 0;
   renderAxioma();
 }
-
 function stopAxiomaTimer() {
-  if (axTimer) {
-    clearInterval(axTimer);
-    axTimer = null;
-  }
-  document.getElementById('axPlayBtn').textContent = '▶ Reproducir animación';
+  if (axTimer) { clearInterval(axTimer); axTimer = null; }
+  document.getElementById('axPlayBtn').textContent = '▶ Reproducir paso a paso';
 }
-
 function toggleAxiomaPlay() {
-  if (axTimer) {
-    stopAxiomaTimer();
-    return;
-  }
+  if (axTimer) { stopAxiomaTimer(); return; }
   const lesson = axiomaLessons[axIdx];
   if (axStep >= lesson.steps.length - 1) axStep = 0;
   renderAxioma();
   document.getElementById('axPlayBtn').textContent = '⏸ Pausar';
   axTimer = setInterval(() => {
-    if (axStep < lesson.steps.length - 1) {
-      axStep++;
-      renderAxioma();
-    } else {
-      stopAxiomaTimer();
-    }
+    if (axStep < lesson.steps.length - 1) { axStep++; renderAxioma(); }
+    else stopAxiomaTimer();
   }, 2600);
 }
 
-/* Inicialización */
+/* Inicialización completa */
 buildTruthTable();
 updateQuantifiers();
 renderPhysical();
+renderVisualLaw();
 loadAxiomaLesson(0);
 </script>
 </body>
